@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LearnClock — Learning Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+  <div id="app">
+
+    <!-- AUTH SCREEN -->
+    <div id="screen-auth" class="screen" style="display:none">
+      <div class="auth-bg">
+        <div class="auth-orb orb1"></div>
+        <div class="auth-orb orb2"></div>
+        <div class="auth-orb orb3"></div>
+      </div>
+      <div class="auth-container">
+        <div class="auth-brand">
+          <div class="brand-icon"><i class="ti ti-clock-bolt"></i></div>
+          <h1>LearnClock</h1>
+          <p>Track every minute of your learning journey</p>
+        </div>
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Sign in</button>
+            <button class="auth-tab" data-tab="register">Register</button>
+          </div>
+          <div id="auth-login" class="auth-form active">
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="login-email" placeholder="you@email.com" autocomplete="email"/>
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"/>
+            </div>
+            <button class="btn-primary" id="btn-login">
+              <i class="ti ti-login"></i> Sign in
+            </button>
+          </div>
+          <div id="auth-register" class="auth-form">
+            <div class="field">
+              <label>Display name</label>
+              <input type="text" id="reg-name" placeholder="Your name"/>
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="reg-email" placeholder="you@email.com" autocomplete="email"/>
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" id="reg-password" placeholder="Min 6 characters" autocomplete="new-password"/>
+            </div>
+            <button class="btn-primary" id="btn-register">
+              <i class="ti ti-user-plus"></i> Create account
+            </button>
+          </div>
+          <div id="auth-message" class="auth-msg hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETUP SCREEN -->
+    <div id="screen-setup" class="screen" style="display:none">
+      <div class="setup-container">
+        <div class="setup-header">
+          <div class="brand-icon sm"><i class="ti ti-list-check"></i></div>
+          <h2>Set up your learning plan</h2>
+          <p>Add the topics you want to track. You can always add more later.</p>
+        </div>
+        <div id="setup-topics-list" class="setup-topics"></div>
+        <div class="setup-add-row">
+          <input type="text" id="setup-topic-input" placeholder="Topic name (e.g. SQL, Python, React…)"/>
+          <input type="color" id="setup-topic-color" value="#178CFF" title="Pick a color"/>
+          <button class="btn-outline" id="btn-add-setup-topic"><i class="ti ti-plus"></i> Add</button>
+        </div>
+        <div class="setup-presets">
+          <span class="preset-label">Quick add:</span>
+          <button class="preset-chip" data-name="SQL" data-color="#178CFF">SQL</button>
+          <button class="preset-chip" data-name="Power BI" data-color="#E24B4A">Power BI</button>
+          <button class="preset-chip" data-name="Tableau" data-color="#1D9E75">Tableau</button>
+          <button class="preset-chip" data-name="Data Structures" data-color="#BA7517">Data Structures</button>
+          <button class="preset-chip" data-name="Python" data-color="#534AB7">Python</button>
+          <button class="preset-chip" data-name="JavaScript" data-color="#d4a017">JavaScript</button>
+          <button class="preset-chip" data-name="Machine Learning" data-color="#0F6E56">Machine Learning</button>
+        </div>
+        <button class="btn-primary lg" id="btn-finish-setup">Start tracking <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="screen-main" class="screen" style="display:none">
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="sidebar-brand">
+            <div class="brand-icon xs"><i class="ti ti-clock-bolt"></i></div>
+            <span>LearnClock</span>
+          </div>
+          <nav class="sidebar-nav">
+            <button class="nav-item active" data-view="tracker"><i class="ti ti-clock"></i><span>Tracker</span></button>
+            <button class="nav-item" data-view="progress"><i class="ti ti-chart-bar"></i><span>Progress</span></button>
+            <button class="nav-item" data-view="sessions"><i class="ti ti-history"></i><span>Sessions</span></button>
+            <button class="nav-item" data-view="topics"><i class="ti ti-books"></i><span>My topics</span></button>
+          </nav>
+        </div>
+        <div class="sidebar-bottom">
+          <div class="sidebar-user">
+            <div class="user-avatar" id="user-avatar">?</div>
+            <div class="user-info">
+              <div class="user-name" id="user-name">—</div>
+              <div class="user-day" id="user-day">—</div>
+            </div>
+          </div>
+          <button class="nav-item logout" id="btn-logout"><i class="ti ti-logout"></i><span>Sign out</span></button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <!-- TRACKER -->
+        <div id="view-tracker" class="view active">
+          <div class="view-header">
+            <div>
+              <h2>Today's tracker</h2>
+              <p id="tracker-date" class="view-sub"></p>
+            </div>
+            <div class="header-stats">
+              <div class="stat-pill"><i class="ti ti-flame"></i><span id="today-total">0h 0m today</span></div>
+            </div>
+          </div>
+          <div id="topic-cards" class="topic-grid"></div>
+          <div class="active-sessions-panel">
+            <div class="panel-title"><i class="ti ti-activity"></i> Live sessions</div>
+            <div id="live-sessions-list" class="live-list">No active sessions</div>
+          </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div id="view-progress" class="view">
+          <div class="view-header"><div><h2>Progress overview</h2><p class="view-sub">Your learning analytics</p></div></div>
+          <div id="progress-summary-cards" class="summary-grid"></div>
+          <div class="charts-row">
+            <div class="chart-card wide">
+              <div class="chart-title">Hours per topic</div>
+              <div class="chart-wrap" style="height:260px"><canvas id="chart-topics" role="img" aria-label="Hours per topic"></canvas></div>
+            </div>
+          </div>
+          <div class="charts-row">
+            <div class="chart-card wide">
+              <div class="chart-title">Daily study — last 14 days</div>
+              <div class="chart-wrap" style="height:200px"><canvas id="chart-daily" role="img" aria-label="Daily study hours"></canvas></div>
+            </div>
+          </div>
+          <div class="chart-card wide">
+            <div class="chart-title">Goal progress per topic</div>
+            <div id="goal-bars"></div>
+          </div>
+        </div>
+
+        <!-- SESSIONS -->
+        <div id="view-sessions" class="view">
+          <div class="view-header">
+            <div><h2>Session history</h2><p class="view-sub">All your clock-in / clock-out records</p></div>
+            <div><select id="session-filter-topic" class="select-input"><option value="">All topics</option></select></div>
+          </div>
+          <div id="sessions-table-wrap" class="sessions-table-wrap"></div>
+        </div>
+
+        <!-- TOPICS -->
+        <div id="view-topics" class="view">
+          <div class="view-header"><div><h2>My topics</h2><p class="view-sub">Manage your learning subjects</p></div></div>
+          <div class="add-topic-form card">
+            <h3>Add new topic</h3>
+            <div class="form-row">
+              <div class="field"><label>Topic name</label><input type="text" id="new-topic-name" placeholder="e.g. React, AWS, Statistics…"/></div>
+              <div class="field narrow"><label>Color</label><input type="color" id="new-topic-color" value="#178CFF"/></div>
+              <div class="field narrow"><label>Goal (hours)</label><input type="number" id="new-topic-goal" placeholder="e.g. 20" min="1" max="1000"/></div>
+            </div>
+            <button class="btn-primary" id="btn-add-topic"><i class="ti ti-plus"></i> Add topic</button>
+          </div>
+          <div id="topics-manage-list" class="topics-manage-grid"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Loading indicator shown until app boots -->
+  <div id="boot-loader" style="position:fixed;inset:0;background:#0a0b0f;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:14px">
+    <div style="width:40px;height:40px;border:3px solid #1e2130;border-top-color:#5b73ff;border-radius:50%;animation:spin 0.8s linear infinite"></div>
+    <p style="color:#555e78;font-size:13px;font-family:'DM Sans',sans-serif">Loading LearnClock…</p>
+  </div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    // Hide boot loader once app module loads
+    document.querySelector('script[type="module"]').addEventListener('load', () => {
+      setTimeout(() => { const l = document.getElementById('boot-loader'); if(l) l.style.display='none'; }, 500);
+    });
+    // Fallback hide after 4s
+    setTimeout(() => { const l = document.getElementById('boot-loader'); if(l) l.style.display='none'; }, 4000);
+  </script>
+</body>
+</html>
