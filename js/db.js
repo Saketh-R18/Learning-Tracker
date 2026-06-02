@@ -86,5 +86,5 @@ export const DB = (() => {
     return snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(s => s.ended_at && s.duration_seconds);
   }
 
-  return { getTopics, createTopic, deleteTopic, startSession, endSession, getSessions, getAllOpenSessions, getTopicStats };
+  return { getTopics, createTopic, deleteTopic, startSession, endSession, endSessionAt, getSessions, getAllOpenSessions, getTopicStats };
 })();

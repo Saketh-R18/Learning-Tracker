@@ -13,35 +13,38 @@ export const TopicsMgr = (() => {
       list.innerHTML = '<p style="color:var(--text3);font-size:14px">No topics yet. Add your first one above.</p>';
       return;
     }
-    list.innerHTML = topics.map(t => {
+
+    list.innerHTML = '';
+    topics.forEach(t => {
       const sec = stats.filter(s => s.topic_id === t.id).reduce((a,s) => a+(s.duration_seconds||0), 0);
-      return `<div class="topic-manage-card">
+      const card = document.createElement('div');
+      card.className = 'topic-manage-card';
+      card.innerHTML = `
         <div class="topic-color-dot" style="background:${t.color}"></div>
         <div class="topic-manage-info">
           <div class="topic-manage-name">${esc(t.name)}</div>
-          <div class="topic-manage-stats">${(sec/3600).toFixed(1)}h logged · goal: ${t.goal_hours}h</div>
+          <div class="topic-manage-stats">${(sec/3600).toFixed(1)}h total logged</div>
         </div>
-        <button class="btn-delete" title="Delete topic" data-id="${t.id}" data-name="${esc(t.name)}">
+        <button class="btn-delete" title="Delete topic">
           <i class="ti ti-trash"></i>
-        </button>
-      </div>`;
-    }).join('');
-
-    list.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', () => deleteTopic(btn.dataset.id, btn.dataset.name));
+        </button>`;
+      // wire delete directly — no data attributes needed
+      card.querySelector('.btn-delete').addEventListener('click', () => deleteTopic(t.id, t.name));
+      list.appendChild(card);
     });
   }
 
   async function addTopic() {
-    const name = document.getElementById('new-topic-name').value.trim();
-    const color = document.getElementById('new-topic-color').value;
-    const goal = parseInt(document.getElementById('new-topic-goal').value) || 20;
+    const nameEl = document.getElementById('new-topic-name');
+    const colorEl = document.getElementById('new-topic-color');
+    const name = nameEl.value.trim();
+    const color = colorEl.value;
     if (!name) { showToast('Enter a topic name', 'error'); return; }
     const user = Auth.getUser();
     try {
-      await DB.createTopic(user.uid, name, color, goal);
-      document.getElementById('new-topic-name').value = '';
-      document.getElementById('new-topic-goal').value = '';
+      await DB.createTopic(user.uid, name, color, 20);
+      nameEl.value = '';
+      colorEl.value = '#178CFF';
       await Tracker.refresh();
       render();
       showToast(name + ' added!', 'success');
@@ -49,13 +52,13 @@ export const TopicsMgr = (() => {
   }
 
   async function deleteTopic(topicId, name) {
-    if (!confirm(`Delete topic "${name}"? All session history will also be removed.`)) return;
+    if (!confirm(`Delete "${name}"?\n\nAll session history for this topic will also be removed.`)) return;
     try {
       await DB.deleteTopic(topicId);
       await Tracker.refresh();
       render();
       showToast(name + ' deleted', 'info');
-    } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    } catch (e) { showToast('Error deleting: ' + e.message, 'error'); }
   }
 
   return { render, addTopic, deleteTopic };
