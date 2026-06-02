@@ -5,6 +5,7 @@ import { Tracker, showToast, esc } from './tracker.js';
 import { Progress } from './progress.js';
 import { Sessions } from './sessions.js';
 import { TopicsMgr } from './topics.js';
+import { Streak } from './streak.js';
 
 // ── Auth tabs ──────────────────────────────────────────────────
 document.querySelectorAll('.auth-tab').forEach(btn => {
@@ -108,6 +109,7 @@ function switchView(view) {
   if (view === 'progress') Progress.render();
   if (view === 'sessions') { Sessions.populateFilter(Tracker.getTopics()); Sessions.render(); }
   if (view === 'topics') TopicsMgr.render();
+  if (view === 'tracker') Streak.render(Tracker.getStatsCache());
 }
 
 // ── Add topic ──────────────────────────────────────────────────

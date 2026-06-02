@@ -50,6 +50,19 @@ export const DB = (() => {
     return { ...data, id: sessionId, ended_at: now.toISOString(), duration_seconds: dur };
   }
 
+  async function endSessionAt(sessionId, endedAtISO) {
+    try {
+      const ref = doc(db, 'sessions', sessionId);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const data = snap.data();
+      if (data.ended_at) return; // already ended
+      const dur = Math.round((new Date(endedAtISO) - new Date(data.started_at)) / 1000);
+      if (dur <= 0) return;
+      await updateDoc(ref, { ended_at: endedAtISO, duration_seconds: dur });
+    } catch {}
+  }
+
   async function getSessions(userId, topicId) {
     let q;
     if (topicId) {
