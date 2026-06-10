@@ -187,6 +187,7 @@ export const Practice = (() => {
   function openDialog(date, existingCount) {
     selectedDate = date;
     const dlg = document.getElementById('problem-dialog');
+    const overlay = document.getElementById('problem-dialog-overlay');
     if (!dlg) return;
 
     // Populate topic options from user's topics
@@ -208,12 +209,16 @@ export const Practice = (() => {
 
     dlg.classList.remove('hidden');
     dlg.classList.add('visible');
+    overlay.classList.remove('hidden');
+    overlay.classList.add('visible');
     document.getElementById('dlg-count').focus();
   }
 
   function closeDialog() {
     const dlg = document.getElementById('problem-dialog');
+    const overlay = document.getElementById('problem-dialog-overlay');
     if (dlg) { dlg.classList.remove('visible'); dlg.classList.add('hidden'); }
+    if (overlay) { overlay.classList.remove('visible'); overlay.classList.add('hidden'); }
     selectedDate = null;
   }
 
