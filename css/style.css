@@ -284,10 +284,12 @@ input[type=color] { width: 44px; height: 40px; padding: 4px; border-radius: var(
 .heatmap-legend span { font-size:11px; color:var(--text3); }
 
 /* ─── Problem Dialog ───────────────────────────────────────── */
-.dialog-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; backdrop-filter:blur(3px); }
+.dialog-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; backdrop-filter:blur(3px); display:none; }
 .dialog-overlay.visible { display:block; }
-.dialog { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1001; width:90%; max-width:420px; background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius-lg); box-shadow:var(--shadow); max-height:90vh; overflow-y:auto; }
+.dialog { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1001; width:90%; max-width:420px; background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius-lg); box-shadow:var(--shadow); max-height:90vh; overflow-y:auto; display:none; }
 .dialog.visible { display:block; }
+.dialog.hidden { display:none !important; }
+.dialog-overlay.hidden { display:none !important; }
 .dialog-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--border); }
 .dialog-title { font-family:var(--font-display); font-size:15px; font-weight:600; display:flex; align-items:center; gap:8px; }
 .dialog-close { background:transparent; border:none; color:var(--text3); cursor:pointer; font-size:18px; padding:4px; border-radius:6px; transition:color 0.15s; }
