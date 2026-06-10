@@ -107,6 +107,7 @@
             <button class="nav-item active" data-view="tracker"><i class="ti ti-clock"></i><span>Tracker</span></button>
             <button class="nav-item" data-view="progress"><i class="ti ti-chart-bar"></i><span>Progress</span></button>
             <button class="nav-item" data-view="sessions"><i class="ti ti-history"></i><span>Sessions</span></button>
+            <button class="nav-item" data-view="practice"><i class="ti ti-code"></i><span>Practice</span></button>
             <button class="nav-item" data-view="topics"><i class="ti ti-books"></i><span>My topics</span></button>
           </nav>
           <div class="sidebar-streak-wrap">
@@ -165,6 +166,93 @@
           <div class="chart-card wide">
             <div class="chart-title">Time invested — topic comparison</div>
             <div id="goal-bars"></div>
+          </div>
+        </div>
+
+        <!-- PRACTICE -->
+        <div id="view-practice" class="view">
+          <div class="view-header">
+            <div><h2>Problem solving</h2><p class="view-sub">Track your daily coding practice</p></div>
+          </div>
+
+          <!-- Heatmap -->
+          <div class="chart-card wide" style="margin-bottom:1.25rem;overflow-x:auto">
+            <div class="chart-title">Practice heatmap — every day you've been active</div>
+            <div id="heatmap-grid" class="heatmap-wrap"></div>
+          </div>
+
+          <!-- Stats -->
+          <div class="summary-grid" style="margin-bottom:1.25rem">
+            <div class="summary-card"><div class="sc-label">Total solved</div><div class="sc-value" id="ps-total">0</div><div class="sc-sub">all time</div></div>
+            <div class="summary-card"><div class="sc-label">This week</div><div class="sc-value" id="ps-week">0</div><div class="sc-sub">problems</div></div>
+            <div class="summary-card"><div class="sc-label">Best day</div><div class="sc-value" id="ps-best">0</div><div class="sc-sub">problems</div></div>
+            <div class="summary-card"><div class="sc-label">Streak</div><div class="sc-value" id="ps-streak">—</div><div class="sc-sub">consecutive days</div></div>
+          </div>
+
+          <!-- Breakdown bars -->
+          <div class="charts-row">
+            <div class="chart-card" style="flex:1;min-width:200px">
+              <div class="chart-title">By topic</div>
+              <div id="ps-topic-bars"></div>
+            </div>
+            <div class="chart-card" style="flex:1;min-width:200px">
+              <div class="chart-title">By site</div>
+              <div id="ps-site-bars"></div>
+            </div>
+            <div class="chart-card" style="flex:1;min-width:200px">
+              <div class="chart-title">By difficulty</div>
+              <div id="ps-diff-bars"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROBLEM DIALOG OVERLAY -->
+        <div id="problem-dialog-overlay" class="dialog-overlay hidden"></div>
+        <div id="problem-dialog" class="dialog hidden">
+          <div class="dialog-header">
+            <div class="dialog-title"><i class="ti ti-calendar"></i> <span id="dlg-date-label"></span></div>
+            <button class="dialog-close" id="dlg-cancel"><i class="ti ti-x"></i></button>
+          </div>
+          <div class="dialog-body">
+            <div class="dialog-form">
+              <div class="field">
+                <label>Topic</label>
+                <select id="dlg-topic" class="select-input"></select>
+              </div>
+              <div class="field">
+                <label>Platform</label>
+                <select id="dlg-site" class="select-input">
+                  <option>LeetCode</option>
+                  <option>HackerRank</option>
+                  <option>CodeSignal</option>
+                  <option>GeeksforGeeks</option>
+                  <option>Codeforces</option>
+                  <option>NeetCode</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Difficulty</label>
+                <select id="dlg-difficulty" class="select-input">
+                  <option>Easy</option>
+                  <option selected>Medium</option>
+                  <option>Hard</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Problems solved</label>
+                <input type="number" id="dlg-count" min="1" max="100" placeholder="e.g. 3"/>
+              </div>
+              <div class="field">
+                <label>Notes <span style="color:var(--text3);font-weight:400">(optional)</span></label>
+                <input type="text" id="dlg-notes" placeholder="e.g. Binary search, Two pointers…"/>
+              </div>
+            </div>
+            <button class="btn-primary" id="dlg-save" style="width:100%;margin-top:4px">
+              <i class="ti ti-check"></i> Log problems
+            </button>
+            <div class="dialog-entries-title">Entries for this day</div>
+            <div id="dlg-entries" class="dialog-entries"></div>
           </div>
         </div>
 
