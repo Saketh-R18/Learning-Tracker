@@ -86,5 +86,23 @@ export const DB = (() => {
     return snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(s => s.ended_at && s.duration_seconds);
   }
 
-  return { getTopics, createTopic, deleteTopic, startSession, endSession, endSessionAt, getSessions, getAllOpenSessions, getTopicStats };
+  // ── Problem Logs ──────────────────────────────────────────────
+  async function getProblemLogs(userId) {
+    const q = query(collection(db, 'problem_logs'), where('user_id', '==', userId), orderBy('created_at', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
+
+  async function addProblemLog(userId, { date, topic, site, difficulty, count, notes }) {
+    const ref = await addDoc(collection(db, 'problem_logs'), {
+      user_id: userId, date, topic, site, difficulty, count, notes, created_at: serverTimestamp()
+    });
+    return { id: ref.id, user_id: userId, date, topic, site, difficulty, count, notes };
+  }
+
+  async function deleteProblemLog(id) {
+    await deleteDoc(doc(db, 'problem_logs', id));
+  }
+
+  return { getTopics, createTopic, deleteTopic, startSession, endSession, endSessionAt, getSessions, getAllOpenSessions, getTopicStats, getProblemLogs, addProblemLog, deleteProblemLog };
 })();

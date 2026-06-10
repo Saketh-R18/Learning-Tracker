@@ -6,6 +6,7 @@ import { Progress } from './progress.js';
 import { Sessions } from './sessions.js';
 import { TopicsMgr } from './topics.js';
 import { Streak } from './streak.js';
+import { Practice } from './practice.js';
 
 // ── Auth tabs ──────────────────────────────────────────────────
 document.querySelectorAll('.auth-tab').forEach(btn => {
@@ -110,6 +111,7 @@ function switchView(view) {
   if (view === 'sessions') { Sessions.populateFilter(Tracker.getTopics()); Sessions.render(); }
   if (view === 'topics') TopicsMgr.render();
   if (view === 'tracker') Streak.render(Tracker.getStatsCache());
+  if (view === 'practice') Practice.render();
 }
 
 // ── Add topic ──────────────────────────────────────────────────
@@ -139,6 +141,8 @@ async function enterApp() {
 
   showScreen('main');
   await Tracker.init();
+  Practice.setupDialog();
+  await Practice.init();
   switchView('tracker');
 }
 
